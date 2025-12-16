@@ -151,6 +151,7 @@ Sắp xếp sản phẩm tại siêu thị
 ### Author
 Project thực hiện bởi:
 Trang Le
+NHÓM 6 CNTT 17-10
 
 📄 License
 MIT — sử dụng tự do cho nghiên cứu, học thuật và ứng dụng nội bộ.
