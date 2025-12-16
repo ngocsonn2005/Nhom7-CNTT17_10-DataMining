@@ -52,10 +52,10 @@ pm.execute_notebook(
         METRIC="lift",
         MIN_THRESHOLD=1.0,
 
-        # Lọc luật
-        FILTER_MIN_SUPPORT=0.01,
-        FILTER_MIN_CONF=0.3,
-        FILTER_MIN_LIFT=1.2,
+        # Lọc luật(Q2 LAB1)
+        FILTER_MIN_SUPPORT=0.005,   # giảm support
+        FILTER_MIN_CONF=0.2,        # giảm confidence
+        FILTER_MIN_LIFT=1.0,        # giảm lift
         FILTER_MAX_ANTECEDENTS=2,
         FILTER_MAX_CONSEQUENTS=1,
 
