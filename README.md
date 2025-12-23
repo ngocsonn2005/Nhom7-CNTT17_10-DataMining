@@ -1,156 +1,100 @@
 # Shopping Cart Analysis
 
-Phân tích dữ liệu bán lẻ để tìm ra mối quan hệ giữa các sản phẩm thường được mua cùng nhau bằng các kỹ thuật **Association Rule Mining** (Apriori). Project triển khai pipeline đầy đủ từ xử lý dữ liệu → phân tích → khai thác luật → sinh báo cáo.
+Phân tích giỏ hàng bán lẻ bằng **Apriori** và **FP-Growth**. Pipeline tự động hóa từ làm sạch dữ liệu → khai phá luật → so sánh thuật toán.
 
 ---
 
-## Features
-
-- Làm sạch dữ liệu & xử lý giá trị lỗi
-- Xây dựng basket matrix (transaction × product)
-- Khai phá tập mục phổ biến (Frequent itemsets)
-- Sinh luật kết hợp (Association Rules)
-- Các chỉ số:
-  - Support
-  - Confidence
-  - Lift
-- Visualization với:
-  - bar chart
-  - scatter plot
-  - network graph
-  - interactive Plotly
-- Tự động hóa pipeline bằng **Papermill**
-
----
-
-## Project Structure
+## 📁 Project Structure
 
 ```text
 shopping_cart_analysis/
 ├── data/
-│   ├── raw/
-│   │   └── online_retail.csv
-│   └── processed/
-│       ├── cleaned_uk_data.csv
-│       ├── basket_bool.parquet
-│       └── rules_apriori_filtered.csv
-│
+│   ├── raw/online_retail.csv
+│   └── processed/ [cleaned_uk_data.csv, basket_bool.parquet, rules_*.csv]
 ├── notebooks/
-│   ├── preprocessing_and_eda.ipynb
-│   ├── basket_preparation.ipynb
-│   ├── apriori_modelling.ipynb
-│   └── runs/
-│       ├── preprocessing_and_eda_run.ipynb
-│       ├── basket_preparation_run.ipynb
-│       └── apriori_modelling_run.ipynb
-│
-├── src/
-│   └── apriori_library.py
-│
-├── run_papermill.py
+│   ├── preprocessing_and_eda.ipynb        # Bước 1
+│   ├── basket_preparation.ipynb           # Bước 2  
+│   ├── apriori_modelling.ipynb            # Bước 3a
+│   ├── fp_growth_modeling.ipynb           # Bước 3b (NEW)
+│   ├── compare_apriori_fpgrowth.ipynb     # Bước 4 (NEW)
+│   └── runs/ [*_run.ipynb]
+├── src/apriori_library.py                 # Thư viện chính
+├── run_papermill.py                       # Pipeline
 ├── requirements.txt
 └── README.md
 ```
 
 ---
 
-## Installation
+## 🚀 Quick Start
 
 ```bash
-git clone <your_repo_url>
+git clone <your-repo>
 cd shopping_cart_analysis
 pip install -r requirements.txt
-Data Preparation
-Đặt file gốc vào:
+
+# Đặt dữ liệu vào: data/raw/online_retail.csv
+
+# Chạy toàn bộ pipeline
+python run_papermill.py
 ```
 
-```bash
-data/raw/online_retail.csv
-File output sẽ được sinh tự động vào:
-```
+Pipeline chạy tự động 5 bước:
+1. Preprocessing & EDA
+2. Basket Preparation  
+3. Apriori Modelling
+4. FP-Growth Modelling
+5. Compare Algorithms
+
+---
+
+## 📊 Output Files
 
 ```bash
 data/processed/
+├── cleaned_uk_data.csv
+├── basket_bool.parquet
+├── rules_apriori_filtered.csv
+└── rules_fpgrowth_filtered.csv    # NEW
+
+notebooks/runs/
+├── preprocessing_and_eda_run.ipynb
+├── basket_preparation_run.ipynb
+├── apriori_modelling_run.ipynb
+├── fp_growth_modeling_run.ipynb     # NEW
+└── compare_apriori_fpgrowth_run.ipynb  # NEW
 ```
 
-Run Pipeline (Recommended)
-Chạy toàn bộ phân tích chỉ với 1 lệnh:
+---
 
-```bash
-python run_papermill.py
-```
-Kết quả sinh ra:
+## ⚙️ Customization
 
-```bash
-data/processed/cleaned_uk_data.csv
-data/processed/basket_bool.parquet
-data/processed/rules_apriori_filtered.csv
-notebooks/runs/apriori_modelling_run.ipynb
-```
-
-### Changing Parameters
-Các tham số có thể chỉnh trong run_papermill.py:
+Sửa trong `run_papermill.py`:
 
 ```python
-MIN_SUPPORT=0.01
-MAX_LEN=3
-FILTER_MIN_CONF=0.3
-FILTER_MIN_LIFT=1.2
+MIN_SUPPORT = 0.05        # Ngưỡng support tối thiểu
+MAX_LEN = 3               # Độ dài itemset tối đa
+FILTER_MIN_CONF = 0.3     # Ngưỡng confidence
+FILTER_MIN_LIFT = 1.2     # Ngưỡng lift
 ```
 
-Hoặc sửa trong cell PARAMETERS của mỗi notebook để chạy với cấu hình khác nhau.
+---
 
-### Visualization & Results
-Notebook 03 hiển thị các biểu đồ sau:
-
-Top luật theo Lift
-
-Top luật theo Confidence
-
-Scatter Support–Confidence–Lift
-
-Network Graph giữa các sản phẩm
-
-Biểu đồ Plotly tương tác
-
-Bạn có thể export sang HTML:
-
-```bash
-jupyter nbconvert notebooks/runs/priori_modelling_run.ipynb --to html
-```
-
-### Ứng dụng thực tế
-Product recommendation
-
-Cross-selling strategy
-
-Combo gợi ý sản phẩm
-
-Phân tích hành vi mua hàng
-
-Sắp xếp sản phẩm tại siêu thị
-
-### Tech Stack
+## 🛠️ Tech Stack
 
 | Công nghệ | Mục đích |
-|----------|----------|
-| Python | Ngôn ngữ chính |
-| Pandas | Xử lý dữ liệu transaction |
-| MLxtend | Apriori / FP-Growth association rules |
-| Papermill | Chạy pipeline notebook tự động |
-| Matplotlib & Seaborn | Visualization biểu đồ tĩnh |
-| Plotly | Dashboard / biểu đồ tương tác |
-| Jupyter Notebook | Môi trường notebook |
+|-----------|----------|
+| Python, Pandas | Xử lý dữ liệu |
+| MLxtend | Apriori / FP-Growth |
+| Papermill | Tự động hóa pipeline |
+| Matplotlib/Seaborn | Visualization |
+| Plotly | Interactive charts |
+| Jupyter | Notebook environment |
 
-### Roadmap
- Thêm FP-Growth notebook (04)
+---
 
- Streamlit dashboard để lọc luật
+## 📄 License
 
+Educational use only. Contact for commercial licensing.
 
-### Author
-Project được thực hiện bởi:
-Trang Le
-
-📄 License
-MIT — sử dụng tự do cho nghiên cứu, học thuật và ứng dụng nội bộ.
+**Author**: Ngoc Son
